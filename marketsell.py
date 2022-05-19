@@ -1,7 +1,7 @@
 import sys
 import json
 from datetime import datetime as dt
-from binance import Binance
+from exchanges import Binance
 from const import Cex
 
 
