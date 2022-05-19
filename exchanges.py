@@ -75,7 +75,6 @@ class Huobi(Exchange):
         self._client = c.huobi(config={'apiKey':api,'secret':sec})
 
     def get_balance(self, sym: str) -> float:
-        print(self._client.fetch_balance())
         return float(self._client.fetch_balance()[sym.upper()]['free'])
 
     def get_ask(self, counter: str, base: str) -> float:
