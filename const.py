@@ -10,4 +10,5 @@ class Status:
 
 class Cex:
     BNAC = 'binance'
+    HUBI = 'huobi'
     NONE = 'none'
