@@ -75,13 +75,41 @@ class Huobi(Exchange):
         self._client = c.huobi(config={'apiKey':api,'secret':sec})
 
     def get_balance(self, sym: str) -> float:
-        return float(self._client.fetch_balance()[sym.upper()]['free'])
+        try:
+            return float(self._client.fetch_balance()[sym.upper()]['free'])
+        except Exception as e:
+            return (self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'currency':sym},
+                e
+            ))
 
     def get_ask(self, counter: str, base: str) -> float:
-        return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
+        try:
+            return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
+        except Exception as e:
+            return (self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'counter':counter, 'base':base},
+                e
+            ))
     
     def get_bid(self, counter: str, base: str) -> float:
-        return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
+        try:
+            return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
+        except Exception as e:
+            return (self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'counter':counter, 'base':base},
+                e
+            ))
+
 
     def market_sell(self, from_curr: str, to_curr: str, amount: float) -> str:
 

@@ -3,6 +3,7 @@ class Action:
     SELL = 'sell'
     BUY  = 'buy'
     WDRAW = 'withdraw'
+    FETCH = 'fetch'
 
 class Status:
     FAIL = 'fail'
