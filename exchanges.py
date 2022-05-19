@@ -24,7 +24,7 @@ class Binance(Exchange):
 
         #sell the currency using market price
         try:
-            self._client.create_market_sell_order(from_curr+'/'+to_curr,amnt)
+            self._client.create_market_sell_order((from_curr+'/'+to_curr).upper(),amnt)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
@@ -50,7 +50,7 @@ class Binance(Exchange):
 
         #sell the currency using given price
         try:
-            self._client.create_limit_sell_order(from_curr+'/'+to_curr,amnt,prc)
+            self._client.create_limit_sell_order((from_curr+'/'+to_curr).upper(),amnt,prc)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
@@ -116,7 +116,7 @@ class Huobi(Exchange):
 
         #sell the currency using given price
         try:
-            self._client.create_limit_sell_order(from_curr+'/'+to_curr,amnt,prc)
+            self._client.create_limit_sell_order((from_curr+'/'+to_curr).upper(),amnt,prc)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
