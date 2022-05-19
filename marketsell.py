@@ -1,7 +1,7 @@
 import sys
 import json
 from datetime import datetime as dt
-from exchanges import Binance
+from exchanges import Binance, Huobi
 from const import Cex
 
 
@@ -14,6 +14,7 @@ if __name__ == '__main__':
         # Ensure 3 arguments are given
         if len(sys.argv) - 1 != REQUIRED_ARGS:
             raise Exception('There must be ' + str(REQUIRED_ARGS) + ' arguments but ' + str(len(sys.argv)-1) + ' is given!')
+            
 
         #Get the authentication file and exchange to use
         cex                  = sys.argv[1].lower()
@@ -30,13 +31,14 @@ if __name__ == '__main__':
 
         #Create an exchange instance
         if cex == Cex.BNAC: xchng = Binance(apiKey,secret)
+        elif cex == Cex.HUBI: xchng = Huobi(apiKey,secret)
         else: raise Exception('Exchange ' + cex + ' is not supported!')
 
         #sell all available base currencys
         print(str(dt.now()) + ' | ' + xchng.market_sell(ccounter,cbase,xchng.get_balance(cbase)))
 
-    except Exception  as e:
-        print(str(dt.now()) + ' | ' + e)
+    except Exception as e:
+        print(str(dt.now()) + ' | ' + str(e))
 
     finally:
         exit()

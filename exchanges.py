@@ -1,12 +1,12 @@
 from base import Exchange
-from ccxt import binance
+import ccxt as c
 from const import Cex, Status, Action
 
 class Binance(Exchange):
 
     def __init__(self, api: str, sec: str) -> None:
         super().__init__(Cex.BNAC, api, sec)
-        self._client = binance(config={'apiKey':api,'secret':sec})
+        self._client = c.binance(config={'apiKey':api,'secret':sec})
 
     def get_balance(self, sym: str) -> float:
         return float(self._client.fetch_balance()[sym]['free'])
@@ -72,10 +72,11 @@ class Huobi(Exchange):
 
     def __init__(self, api: str, sec: str) -> None:
         super().__init__(Cex.HUBI, api, sec)
-        self._client = binance(config={'apiKey':api,'secret':sec})
+        self._client = c.huobi(config={'apiKey':api,'secret':sec})
 
     def get_balance(self, sym: str) -> float:
-        return float(self._client.fetch_balance()[sym]['free'])
+        print(self._client.fetch_balance())
+        return float(self._client.fetch_balance()[sym.upper()]['free'])
 
     def get_ask(self, counter: str, base: str) -> float:
         return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
