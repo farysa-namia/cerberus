@@ -1,11 +1,10 @@
-from datetime import datetime as dt
 from abc import ABC, abstractmethod
 from const import Cex, Status, Action
 
 class Exchange(ABC):
 
-    def __init__(self, c: Cex, api: str, sec: str) -> None:
-        self._cex = c
+    def __init__(self, cex: Cex, api: str, sec: str) -> None:
+        self._cex = cex
         self._api = api
         self._secret = sec
         return
@@ -61,4 +60,4 @@ class Exchange(ABC):
         Returns:
             str: A standardised error text, ready for output
         """
-        return (str(dt.now()) + ' | ' + str(status) + ' | ' + str(cex) + ' | ' + str(action) + ' | ' + str(params) + ' | ' + str(log))
+        return (str(status) + ' | ' + str(cex) + ' | ' + str(action) + ' | ' + str(params) + ' | ' + str(log))

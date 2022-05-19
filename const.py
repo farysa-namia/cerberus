@@ -9,14 +9,5 @@ class Status:
     SUCC = 'success'
 
 class Cex:
-    HUOB = 'huobi'
     BNAC = 'binance'
     NONE = 'none'
-
-class Symbol:
-    BTC = 'BTC'
-    CKB = 'CKB'
-    KDA = 'KDA'
-    ETH = 'ETH'
-    USDC = 'USDC'
-    USDT = 'USDT'
