@@ -11,8 +11,11 @@ class Binance(Exchange):
     def get_balance(self, sym: str) -> float:
         return float(self._client.fetch_balance()[sym]['free'])
 
-    def get_price(self, counter: str, base: str) -> float:
-        return super().get_price(counter, base)
+    def get_ask(self, counter: str, base: str) -> float:
+        return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
+    
+    def get_bid(self, counter: str, base: str) -> float:
+        return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
 
     def market_sell(self, counter: str, base: str, amount: float) -> str:
 
@@ -36,5 +39,31 @@ class Binance(Exchange):
                 Status.FAIL,
                 Action.SELL,
                 {'from':base, 'to':counter, 'amount':amnt, 'rate':'market'},
+                e
+            ))
+    
+    def limit_sell(self, counter: str, base: str, amount: float, price: float) -> dict:
+
+        #fetch the amount of availble balance for from_currency and convert given price to string
+        amnt = str(self.truncate(amount,6))
+        prc = str(price)
+
+        #sell the currency using given price
+        try:
+            self._client.create_limit_sell_order(counter+'/'+base,amnt,prc)
+            return (self.logify(
+                self.cex,
+                Status.SUCC,
+                Action.SELL,
+                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
+                ('Traded ' + amnt + ' ' + base + ' to ' + counter + ' at ' + prc + ' ' + base + ' per ' + counter),
+            ))
+
+        except Exception as e:     
+            return (self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.SELL,
+                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
                 e
             ))

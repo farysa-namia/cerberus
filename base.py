@@ -25,10 +25,16 @@ class Exchange(ABC):
     def get_balance(self, sym: str) -> float: pass
 
     @abstractmethod
-    def get_price(self, counter: str, base: str) -> float: pass
+    def get_ask(self, counter: str, base: str) -> float: pass
+
+    @abstractmethod
+    def get_bid(self, counter: str, base: str) -> float: pass
 
     @abstractmethod
     def market_sell(self, counter: str, base: str, amount: float) -> dict: pass
+
+    @abstractmethod
+    def limit_sell(self, counter: str, base: str, amount: float, price: float) -> dict: pass
 
     @staticmethod
     def truncate(f: float, n: int) -> str:
