@@ -32,8 +32,8 @@ if __name__ == '__main__':
         if cex == Cex.BNAC: xchng = Binance(apiKey,secret)
         else: raise Exception('Exchange ' + cex + ' is not supported!')
 
-        #sell all available BTC
-        print(xchng.market_sell(ccounter,cbase,xchng.get_balance(cbase)))
+        #sell all available base currencys
+        print(str(dt.now()) + ' | ' + xchng.market_sell(ccounter,cbase,xchng.get_balance(cbase)))
 
     except Exception  as e:
         print(str(dt.now()) + ' | ' + e)
