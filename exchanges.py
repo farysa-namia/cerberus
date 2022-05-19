@@ -9,7 +9,7 @@ class Binance(Exchange):
         self._client = c.binance(config={'apiKey':api,'secret':sec})
 
     def get_balance(self, sym: str) -> float:
-        return float(self._client.fetch_balance()[sym]['free'])
+        return float(self._client.fetch_balance()[sym.upper()]['free'])
 
     def get_ask(self, counter: str, base: str) -> float:
         return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
