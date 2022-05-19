@@ -19,8 +19,8 @@ if __name__ == '__main__':
         #Get the authentication file and exchange to use
         cex                  = sys.argv[1].lower()
         authFile             = sys.argv[2]
-        ccounter             = sys.argv[3].lower()
-        cbase                = sys.argv[4].lower()
+        from_curr            = sys.argv[3].lower()
+        to_curr              = sys.argv[4].lower()
 
         #Get the api key and secret from file, and the close it
         with open(authFile) as aFile: 
@@ -34,8 +34,12 @@ if __name__ == '__main__':
         elif cex == Cex.HUBI: xchng = Huobi(apiKey,secret)
         else: raise Exception('Exchange ' + cex + ' is not supported!')
 
+
+        #get the amount to sell
+        amount = xchng.get_balance(from_curr)
+
         #sell all available base currencys
-        print(str(dt.now()) + ' | ' + xchng.market_sell(ccounter,cbase,xchng.get_balance(cbase)))
+        print(str(dt.now()) + ' | ' + xchng.market_sell(from_curr,to_curr,amount))
 
     except Exception as e:
         print(str(dt.now()) + ' | ' + str(e))

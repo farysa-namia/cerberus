@@ -17,20 +17,20 @@ class Binance(Exchange):
     def get_bid(self, counter: str, base: str) -> float:
         return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
 
-    def market_sell(self, counter: str, base: str, amount: float) -> str:
+    def market_sell(self, from_curr: str, to_curr: str, amount: float) -> str:
 
         #fetch the amount of availble balance for from_currency
         amnt = str(self.truncate(amount,6))
 
         #sell the currency using market price
         try:
-            self._client.create_market_sell_order(counter+'/'+base,amnt)
+            self._client.create_market_sell_order(from_curr+'/'+to_curr,amnt)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':'market'},
-                ('Traded ' + amnt + ' ' + base + ' to ' + counter + ' at market price.'),
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at market price.'),
             ))
 
         except Exception as e:     
@@ -38,11 +38,11 @@ class Binance(Exchange):
                 self.cex,
                 Status.FAIL,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':'market'},
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
                 e
             ))
     
-    def limit_sell(self, counter: str, base: str, amount: float, price: float) -> dict:
+    def limit_sell(self, from_curr: str, to_curr: str, amount: float, price: float) -> dict:
 
         #fetch the amount of availble balance for from_currency and convert given price to string
         amnt = str(self.truncate(amount,6))
@@ -50,13 +50,13 @@ class Binance(Exchange):
 
         #sell the currency using given price
         try:
-            self._client.create_limit_sell_order(counter+'/'+base,amnt,prc)
+            self._client.create_limit_sell_order(from_curr+'/'+to_curr,amnt,prc)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
-                ('Traded ' + amnt + ' ' + base + ' to ' + counter + ' at ' + prc + ' ' + base + ' per ' + counter),
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at ' + prc + ' ' + from_curr + ' per ' + to_curr),
             ))
 
         except Exception as e:     
@@ -64,7 +64,7 @@ class Binance(Exchange):
                 self.cex,
                 Status.FAIL,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
                 e
             ))
 
@@ -83,20 +83,20 @@ class Huobi(Exchange):
     def get_bid(self, counter: str, base: str) -> float:
         return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
 
-    def market_sell(self, counter: str, base: str, amount: float) -> str:
+    def market_sell(self, from_curr: str, to_curr: str, amount: float) -> str:
 
         #fetch the amount of availble balance for from_currency
         amnt = str(self.truncate(amount,6))
 
         #sell the currency using market price
         try:
-            self._client.create_market_sell_order(counter+'/'+base,amnt)
+            self._client.create_market_sell_order((from_curr+'/'+to_curr).upper(),amnt)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':'market'},
-                ('Traded ' + amnt + ' ' + base + ' to ' + counter + ' at market price.'),
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at market price.'),
             ))
 
         except Exception as e:     
@@ -104,11 +104,11 @@ class Huobi(Exchange):
                 self.cex,
                 Status.FAIL,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':'market'},
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
                 e
             ))
     
-    def limit_sell(self, counter: str, base: str, amount: float, price: float) -> dict:
+    def limit_sell(self, from_curr: str, to_curr: str, amount: float, price: float) -> dict:
 
         #fetch the amount of availble balance for from_currency and convert given price to string
         amnt = str(self.truncate(amount,6))
@@ -116,13 +116,13 @@ class Huobi(Exchange):
 
         #sell the currency using given price
         try:
-            self._client.create_limit_sell_order(counter+'/'+base,amnt,prc)
+            self._client.create_limit_sell_order(from_curr+'/'+to_curr,amnt,prc)
             return (self.logify(
                 self.cex,
                 Status.SUCC,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
-                ('Traded ' + amnt + ' ' + base + ' to ' + counter + ' at ' + prc + ' ' + base + ' per ' + counter),
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at ' + prc + ' ' + from_curr + ' per ' + to_curr),
             ))
 
         except Exception as e:     
@@ -130,6 +130,6 @@ class Huobi(Exchange):
                 self.cex,
                 Status.FAIL,
                 Action.SELL,
-                {'from':base, 'to':counter, 'amount':amnt, 'rate':prc},
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
                 e
             ))
