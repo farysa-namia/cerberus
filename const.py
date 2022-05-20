@@ -4,6 +4,8 @@ class Action:
     BUY  = 'buy'
     WDRAW = 'withdraw'
     FETCH = 'fetch'
+    MSELL = 'marketsell'
+    LSELL = 'limitsell'
 
 class Status:
     FAIL = 'fail'
