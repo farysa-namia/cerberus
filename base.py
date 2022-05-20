@@ -1,7 +1,6 @@
-from abc import ABC, abstractmethod
 from const import Cex, Status, Action
 
-class Exchange(ABC):
+class Exchange:
 
     def __init__(self, cex: Cex, api: str, sec: str) -> None:
         self._cex = cex
@@ -21,20 +20,92 @@ class Exchange(ABC):
     def secret(self) -> str:
         return self._secret
 
-    @abstractmethod
-    def get_balance(self, sym: str) -> float: pass
+    def get_balance(self, sym: str) -> float:
+        try:
+            return float(self._client.fetch_balance()[sym.upper()]['free'])
+        except Exception as e:
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'currency':sym},
+                e
+            ))
 
-    @abstractmethod
-    def get_ask(self, counter: str, base: str) -> float: pass
+    def get_ask(self, counter: str, base: str) -> float:
+        try:
+            return float(self._client.fetch_order_book(counter+'/'+base)['asks'][0])
+        except Exception as e:
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'counter':counter, 'base':base},
+                e
+            ))
 
-    @abstractmethod
-    def get_bid(self, counter: str, base: str) -> float: pass
+    def get_bid(self, counter: str, base: str) -> float:
+        try:
+            return float(self._client.fetch_order_book(counter+'/'+base)['bids'][0])
+        except Exception as e:
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.FETCH,
+                {'counter':counter, 'base':base},
+                e
+            ))
 
-    @abstractmethod
-    def market_sell(self, counter: str, base: str, amount: float) -> dict: pass
+    def market_sell(self, from_curr: str, to_curr: str, amount: float) -> str:
 
-    @abstractmethod
-    def limit_sell(self, counter: str, base: str, amount: float, price: float) -> dict: pass
+        #fetch the amount of availble balance for from_currency
+        amnt = str(self.truncate(amount,6))
+
+        #sell the currency using market price
+        try:
+            self._client.create_market_sell_order((from_curr+'/'+to_curr).upper(),amnt)
+            return (self.logify(
+                self.cex,
+                Status.SUCC,
+                Action.SELL,
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at market price.'),
+            ))
+
+        except Exception as e:     
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.SELL,
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':'market'},
+                e
+            ))
+
+    def limit_sell(self, from_curr: str, to_curr: str, amount: float, price: float) -> str:
+
+        #fetch the amount of availble balance for from_currency and convert given price to string
+        amnt = str(self.truncate(amount,6))
+        prc = str(price)
+
+        #sell the currency using given price
+        try:
+            self._client.create_limit_sell_order((from_curr+'/'+to_curr).upper(),amnt,prc)
+            return (self.logify(
+                self.cex,
+                Status.SUCC,
+                Action.SELL,
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
+                ('Traded ' + amnt + ' ' + from_curr + ' to ' + to_curr + ' at ' + prc + ' ' + from_curr + ' per ' + to_curr),
+            ))
+
+        except Exception as e:     
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.SELL,
+                {'from':from_curr, 'to':to_curr, 'amount':amnt, 'rate':prc},
+                e
+            ))
 
     @staticmethod
     def truncate(f: float, n: int) -> str:
