@@ -8,6 +8,10 @@ This project aims to provide a simple CLI-based trading and withdrawal for suppo
 
 # Usage
 
+python3 cerberus.py [exchange name] [api access file] [account action]
+
+# Usage
+
 To-be documented
 
 # To-do list
