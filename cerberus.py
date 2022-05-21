@@ -12,7 +12,7 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser()
         parser.add_argument('cex', help='the exchange you want to use', choices=[Cex.BNAC, Cex.HUBI])
         parser.add_argument('auth', help='the path to the api key/secret', type=str)
-        parser.add_argument('action', help='what you want to do', choices=[Action.MSELL, Action.LSELL])
+        parser.add_argument('action', help='what you want to do', choices=[Action.MSELL, Action.LSELL, Action.QBALC])
         parser.add_argument('-frm', help='currency to operate from', type=str)
         parser.add_argument('-to', help='currency to operate to', type=str)
         parser.add_argument('-percent', help='percentage of holdings to sell', choices=[x for x in range(1,101)], type=int)
@@ -72,6 +72,21 @@ if __name__ == '__main__':
 
             #sell from currency
             print(str(dt.now()) + ' | ' + xchng.limit_sell(from_curr,to_curr,amount,price))
+
+        elif action == Action.QBALC:
+
+            #ensure the frm, to, precent amount is geiven
+            if arg.frm is None: raise Exception('From Currency symbol is not given to check balance!')
+
+            #grab the from currecnyc
+            from_curr = arg.frm
+
+            #ensure the currency symbols are lowered to avoid any error with exchanges
+            from_curr = from_curr.lower()
+
+            #get the balance for the currency
+            print(str(dt.now()) + ' | ' + cex + ' | ' + from_curr + ' | ' + xchng.get_balance(from_curr))
+
 
     #all errors will be printed out to console
     except Exception as e:
