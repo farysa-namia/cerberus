@@ -6,6 +6,7 @@ class Action:
     FETCH = 'fetch'
     MSELL = 'marketsell'
     LSELL = 'limitsell'
+    QBALC = 'balance'
 
 class Status:
     FAIL = 'fail'
