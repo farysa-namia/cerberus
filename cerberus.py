@@ -85,7 +85,7 @@ if __name__ == '__main__':
             from_curr = from_curr.lower()
 
             #get the balance for the currency
-            print(str(dt.now()) + ' | ' + cex + ' | ' + from_curr + ' | ' + str(xchng.get_balance(from_curr)))
+            print(str(dt.now()) + ' | ' + cex + ' | ' + from_curr + ' | ' + 'balance : ' + str(xchng.get_balance(from_curr)))
 
 
     #all errors will be printed out to console
