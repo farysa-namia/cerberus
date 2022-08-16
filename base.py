@@ -113,7 +113,7 @@ class Exchange:
         amnt = str(self.truncate(amount,6))
 
         try:
-            self._client.withdraw(from_curr,amnt,to_addy, params={'network':network})
+            self._client.withdraw(from_curr,amnt,to_addy, params={'chain':network})
             return (self.logify(
                 self.cex,
                 Status.SUCC,
