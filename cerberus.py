@@ -105,8 +105,8 @@ if __name__ == '__main__':
             #ensure the currency symbols are lower to avoid any error with exchanges
             from_curr = from_curr.lower()
 
-            #get the amount to withdraw
-            amount = xchng.get_balance(from_curr) * (percent/100)
+            #get the amount to withdraw (less fees)
+            amount = (xchng.get_balance(from_curr) * (percent/100)) - xchng.get_withdrawal_fee(from_curr, net)
 
             #withdraw the currency to address
             print(str(dt.now()) + ' | ' + xchng.withdraw(from_curr,amount,addy, net))
