@@ -103,7 +103,7 @@ if __name__ == '__main__':
             from_curr, percent, addy, net = arg.frm, arg.percent, arg.address, arg.network
 
             #ensure the currency symbols are upper to avoid any error with exchanges
-            from_curr = from_curr.lower()
+            from_curr = from_curr.upper()
 
             #get the amount to withdraw
             amount = xchng.get_balance(from_curr) * (percent/100)
