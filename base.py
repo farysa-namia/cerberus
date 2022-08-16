@@ -107,6 +107,30 @@ class Exchange:
                 e
             ))
 
+    def withdraw(self, from_curr: str, amount: float, to_addy: str) -> str:
+
+        #truncate the amount to 6 decimal places
+        amnt = str(self.truncate(amount,6))
+
+        try:
+            self._client.withdraw(from_curr,amnt,to_addy)
+            return (self.logify(
+                self.cex,
+                Status.SUCC,
+                Action.WDRAW,
+                {'currency':from_curr, 'amount':amnt, 'address':to_addy},
+                ('Withdrawn ' + amnt + ' ' + from_curr + ' to ' + to_addy),
+            ))
+        
+        except Exception as e:     
+            raise Exception(self.logify(
+                self.cex,
+                Status.FAIL,
+                Action.WDRAW,
+                {'currency':from_curr, 'amount':amnt, 'address':to_addy},
+                e
+            ))
+
     @staticmethod
     def truncate(f: float, n: int) -> str:
         """Truncates a given float to the specified decimal places

@@ -12,11 +12,12 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser()
         parser.add_argument('cex', help='the exchange you want to use', choices=[Cex.BNAC, Cex.HUBI])
         parser.add_argument('auth', help='the path to the api key/secret', type=str)
-        parser.add_argument('action', help='what you want to do', choices=[Action.MSELL, Action.LSELL, Action.QBALC])
+        parser.add_argument('action', help='what you want to do', choices=[Action.MSELL, Action.LSELL, Action.QBALC, Action.WDRAW])
         parser.add_argument('-frm', help='currency to operate from', type=str)
         parser.add_argument('-to', help='currency to operate to', type=str)
         parser.add_argument('-percent', help='percentage of holdings to sell', choices=[x for x in range(1,101)], type=int)
         parser.add_argument('-price', help='price to sell holdings for', type=float)
+        parser.add_argument('-address', help='address to withdraw to', type=str)
         arg = parser.parse_args()
         cex, auth, action = arg.cex, arg.auth, arg.action
 
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
             #sell from currency
             print(str(dt.now()) + ' | ' + xchng.limit_sell(from_curr,to_curr,amount,price))
-
+        
         elif action == Action.QBALC:
 
             #ensure the frm, to, precent amount is geiven
@@ -87,6 +88,26 @@ if __name__ == '__main__':
             #get the balance for the currency
             print(str(dt.now()) + ' | ' + cex + ' | ' + from_curr + ' | ' + 'balance : ' + str(xchng.get_balance(from_curr)))
 
+        #if the action selected is withdraw
+        elif action == Action.WDRAW:
+
+            #ensure the frm, to_address, percentage is given
+            if arg.frm is None: raise Exception('From Currency symbol is not given!')
+            if arg.percent is None: raise Exception('Percentage to withdraw is not given!')
+            if arg.address is None: raise Exception('Address to withdraw to is not given!')
+
+            #grab the from, to, percent and price
+            from_curr, percent, addy = arg.frm, arg.percent, arg.address
+
+            #ensure the currency symbols are upper to avoid any error with exchanges
+            from_curr = from_curr.lower()
+
+            #get the amount to withdraw
+            amount = xchng.get_balance(from_curr) * (percent/100)
+
+            #withdraw the currency to address
+            print(str(dt.now()) + ' | ' + xchng.withdraw(from_curr,amount,addy))
+            
 
     #all errors will be printed out to console
     except Exception as e:
