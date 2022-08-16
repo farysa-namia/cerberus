@@ -19,6 +19,14 @@ class Exchange:
     @property
     def secret(self) -> str:
         return self._secret
+    
+    def get_withdrawal_fee(self, sym: str, net: str) -> float:
+        try:
+            chains = self._client.currencies[sym.upper()]['info']['chains']
+            for chain in chains:
+                if chain['chain'] == net: return(float(chain['transactFeeWithdraw']))
+        except Exception as e:
+            raise Exception(self.logify(self.cex,Status.FAIL,Action.WDRAW,{'currency':sym, 'network':net},e))
 
     def get_balance(self, sym: str) -> float:
         try:
