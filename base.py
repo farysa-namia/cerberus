@@ -127,7 +127,7 @@ class Exchange:
                 self.cex,
                 Status.FAIL,
                 Action.WDRAW,
-                {'currency':from_curr, 'amount':amnt, 'address':to_addy},
+                {'currency':from_curr, 'amount':amnt, 'address':to_addy, 'network':network},
                 e
             ))
 
