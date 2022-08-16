@@ -109,7 +109,7 @@ if __name__ == '__main__':
             amount = xchng.get_balance(from_curr) * (percent/100)
             
             #get withdrawal fee for currency
-            print(xchng.fetch_currencies())
+            print(xchng.fees)
 
             #withdraw the currency to address
             print(str(dt.now()) + ' | ' + xchng.withdraw(from_curr,amount,addy, net))
