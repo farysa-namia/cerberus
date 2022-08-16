@@ -107,19 +107,19 @@ class Exchange:
                 e
             ))
 
-    def withdraw(self, from_curr: str, amount: float, to_addy: str) -> str:
+    def withdraw(self, from_curr: str, amount: float, to_addy: str, network: str) -> str:
 
         #truncate the amount to 6 decimal places
         amnt = str(self.truncate(amount,6))
 
         try:
-            self._client.withdraw(from_curr,amnt,to_addy)
+            self._client.withdraw(from_curr,amnt,to_addy, params={'network':network})
             return (self.logify(
                 self.cex,
                 Status.SUCC,
                 Action.WDRAW,
-                {'currency':from_curr, 'amount':amnt, 'address':to_addy},
-                ('Withdrawn ' + amnt + ' ' + from_curr + ' to ' + to_addy),
+                {'currency':from_curr, 'amount':amnt, 'address':to_addy, 'network':network},
+                ('Withdrawn ' + amnt + ' ' + from_curr + ' to ' + to_addy + ' on ' + network),
             ))
         
         except Exception as e:     
